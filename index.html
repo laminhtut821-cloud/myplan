@@ -1,0 +1,2680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover, maximum-scale=1.5">
+    <title>强韧生活 · 一体化管理</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2DD4BF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="强韧生活">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent
+        }
+        :root {
+            --bg-body: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            --bg-container: rgba(12, 20, 35, 0.65);
+            --border-glow: rgba(0, 255, 255, 0.2);
+            --text: #ffffff;
+            --text-secondary: #2DD4BF;
+            --card-bg: rgba(0, 0, 0, 0.45);
+            --table-bg: rgba(0, 0, 0, 0.3);
+            --th-bg: #0f172ad9;
+            --td-bg: rgba(10, 20, 35, 0.7);
+            --btn-bg: rgba(20, 30, 45, 0.85);
+            --btn-border: #2DD4BF;
+            --highlight-bg: #2DD4BF;
+            --modal-bg: rgba(0, 0, 0, 0.85);
+            --banner-bg: linear-gradient(135deg, #2DD4BF, #0f766e);
+            --nav-bg: rgba(0, 0, 0, 0.6);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --radius: 28px;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --income: #4ade80;
+            --expense: #f87171;
+            --lend: #a78bfa;
+            --borrow: #fbbf24;
+            --deposit: #38bdf8;
+            --input-bg: rgba(20, 30, 50, 0.7);
+        }
+        body {
+            margin: 0;
+            padding: 10px 10px 80px;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+        body.theme-aurora {
+            --bg-body: linear-gradient(145deg, #0b2f3c, #021017);
+            --bg-container: rgba(0, 30, 40, 0.65);
+            --border-glow: #4ade80;
+            --text: #e0f2fe;
+            --text-secondary: #4ade80;
+            --card-bg: rgba(0, 30, 40, 0.8);
+            --table-bg: rgba(0, 20, 30, 0.5);
+            --th-bg: #0a2e3a;
+            --td-bg: #07212e;
+            --btn-bg: #0a3a44;
+            --btn-border: #4ade80;
+            --highlight-bg: #4ade80;
+            --banner-bg: linear-gradient(135deg, #4ade80, #16a34a);
+            --nav-bg: rgba(2, 16, 23, 0.8);
+            --input-bg: rgba(10, 40, 50, 0.7);
+        }
+        body.theme-sunset {
+            --bg-body: linear-gradient(145deg, #1a0a00, #3d1c00);
+            --bg-container: rgba(60, 25, 0, 0.65);
+            --border-glow: #ffb347;
+            --text: #fff5ec;
+            --text-secondary: #ffb347;
+            --card-bg: rgba(40, 20, 0, 0.7);
+            --table-bg: rgba(30, 12, 0, 0.5);
+            --th-bg: #5c2a00;
+            --td-bg: #3d1c00;
+            --btn-bg: #5c2a00;
+            --btn-border: #ffb347;
+            --highlight-bg: #ffb347;
+            --banner-bg: linear-gradient(135deg, #ffb347, #f97316);
+            --nav-bg: rgba(20, 8, 0, 0.8);
+            --input-bg: rgba(60, 25, 0, 0.7);
+        }
+        body.theme-light-gray {
+            --bg-body: #f0f2f5;
+            --bg-container: rgba(255, 255, 255, 0.85);
+            --border-glow: #c0c4cc;
+            --text: #2c3e50;
+            --text-secondary: #5a6d80;
+            --card-bg: #ffffff;
+            --table-bg: #f8f9fa;
+            --th-bg: #e9ecef;
+            --td-bg: #ffffff;
+            --btn-bg: #e9ecef;
+            --btn-border: #c0c4cc;
+            --highlight-bg: #5a6d80;
+            --banner-bg: linear-gradient(135deg, #5a6d80, #34495e);
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --input-bg: #f8f9fa;
+        }
+        body.theme-sakura {
+            --bg-body: linear-gradient(145deg, #fce4ec, #f8bbd0);
+            --bg-container: rgba(255, 240, 245, 0.85);
+            --border-glow: #f06292;
+            --text: #4a1525;
+            --text-secondary: #c2185b;
+            --card-bg: #fff0f5;
+            --table-bg: rgba(255, 235, 240, 0.7);
+            --th-bg: #f8bbd0;
+            --td-bg: #fff0f5;
+            --btn-bg: #f8bbd0;
+            --btn-border: #f06292;
+            --highlight-bg: #f06292;
+            --banner-bg: linear-gradient(135deg, #f48fb1, #ec407a);
+            --nav-bg: rgba(255, 240, 245, 0.9);
+            --input-bg: #fff0f5;
+        }
+        body.theme-ink {
+            --bg-body: #121212;
+            --bg-container: rgba(30, 30, 30, 0.85);
+            --border-glow: #5a5a5a;
+            --text: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --card-bg: #1e1e1e;
+            --table-bg: rgba(40, 40, 40, 0.5);
+            --th-bg: #2c2c2c;
+            --td-bg: #1e1e1e;
+            --btn-bg: #2c2c2c;
+            --btn-border: #5a5a5a;
+            --highlight-bg: #5a5a5a;
+            --banner-bg: linear-gradient(135deg, #5a5a5a, #3a3a3a);
+            --nav-bg: rgba(18, 18, 18, 0.9);
+            --input-bg: #2c2c2c;
+        }
+        body.theme-mint {
+            --bg-body: linear-gradient(145deg, #e0f7fa, #b2dfdb);
+            --bg-container: rgba(240, 255, 250, 0.85);
+            --border-glow: #4db6ac;
+            --text: #1e3a3a;
+            --text-secondary: #00796b;
+            --card-bg: #ffffff;
+            --table-bg: rgba(245, 255, 250, 0.7);
+            --th-bg: #b2dfdb;
+            --td-bg: #f0fdfa;
+            --btn-bg: #b2dfdb;
+            --btn-border: #4db6ac;
+            --highlight-bg: #4db6ac;
+            --banner-bg: linear-gradient(135deg, #4db6ac, #26a69a);
+            --nav-bg: rgba(240, 255, 250, 0.9);
+            --input-bg: #f0fdfa;
+        }
+        body.theme-ocean {
+            --bg-body: linear-gradient(145deg, #003366, #001a33);
+            --bg-container: rgba(0, 30, 60, 0.75);
+            --border-glow: #66b2ff;
+            --text: #e6f2ff;
+            --text-secondary: #66b2ff;
+            --card-bg: rgba(0, 20, 40, 0.8);
+            --table-bg: rgba(0, 10, 20, 0.5);
+            --th-bg: #00264d;
+            --td-bg: #001a33;
+            --btn-bg: #003366;
+            --btn-border: #66b2ff;
+            --highlight-bg: #66b2ff;
+            --banner-bg: linear-gradient(135deg, #66b2ff, #003366);
+            --nav-bg: rgba(0, 10, 20, 0.8);
+            --input-bg: rgba(0, 30, 60, 0.7);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 10px
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-secondary), var(--text));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+        .theme-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+        .theme-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--border-glow);
+            background: var(--btn-bg);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-shadow: var(--shadow)
+        }
+        .theme-btn.active {
+            border-color: var(--text-secondary);
+            box-shadow: 0 0 14px var(--text-secondary);
+            transform: scale(1.1)
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border-glow);
+            z-index: 100
+        }
+        .bottom-nav button {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            padding: 8px;
+            opacity: 0.7;
+            transition: 0.2s;
+            cursor: pointer
+        }
+        .bottom-nav button.active {
+            color: var(--text-secondary);
+            opacity: 1;
+            font-weight: bold
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.3s
+        }
+        .page.active {
+            display: block
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+            to {
+                opacity: 1
+            }
+        }
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            border-radius: var(--radius);
+            padding: 22px;
+            border: 1px solid var(--border-glow);
+            box-shadow: var(--shadow);
+            margin-bottom: 18px
+        }
+        .current-task-banner {
+            background: var(--banner-bg);
+            border-radius: 24px;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 6px 20px var(--border-glow);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s
+        }
+        .current-task-banner:hover {
+            transform: scale(1.01)
+        }
+        .current-subtasks-mini {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 10px 16px;
+            margin-bottom: 14px;
+            border: 1px dashed var(--border-glow);
+            font-size: 0.8rem;
+            color: var(--text);
+            min-height: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center
+        }
+        .current-subtasks-mini .mini-sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--btn-bg);
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 0.72rem
+        }
+        .current-subtasks-mini .mini-sub.done {
+            opacity: 0.5;
+            text-decoration: line-through
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.8rem;
+            background: var(--table-bg);
+            border-radius: 18px;
+            overflow: hidden
+        }
+        th,
+        td {
+            border: 0.5px solid var(--border-glow);
+            padding: 10px 6px;
+            text-align: center;
+            background: var(--td-bg);
+            color: var(--text)
+        }
+        th {
+            background: var(--th-bg);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.7rem
+        }
+        th:first-child,
+        td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            background: var(--th-bg);
+            color: var(--text-secondary);
+            font-weight: bold
+        }
+        td:first-child {
+            background: var(--td-bg);
+            font-family: monospace
+        }
+        .cell-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            min-height: 22px;
+            cursor: pointer;
+            flex-wrap: wrap
+        }
+        td.merge-master .cell-content {
+            justify-content: center
+        }
+        .subtask-count {
+            font-size: 0.6rem;
+            background: var(--btn-bg);
+            border-radius: 10px;
+            padding: 0 4px;
+            margin-left: 4px;
+            opacity: 0.8
+        }
+        td.selected-cell {
+            outline: 2px solid var(--text-secondary);
+            outline-offset: -2px;
+            z-index: 5
+        }
+        td.now-highlight {
+            background: var(--highlight-bg) !important;
+            color: #fff !important;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--text-secondary);
+            border-radius: 8px;
+            transform: scale(1.02);
+            z-index: 4;
+            animation: glowPulse 2s infinite
+        }
+        @keyframes glowPulse {
+            0% {
+                box-shadow: 0 0 8px var(--text-secondary)
+            }
+            50% {
+                box-shadow: 0 0 22px var(--text-secondary)
+            }
+            100% {
+                box-shadow: 0 0 8px var(--text-secondary)
+            }
+        }
+        .sub-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap
+        }
+        .sub-tab {
+            padding: 10px 18px;
+            border-radius: 24px;
+            background: var(--btn-bg);
+            color: var(--text);
+            border: 1px solid var(--border-glow);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+            box-shadow: var(--shadow)
+        }
+        .sub-tab.active {
+            background: var(--highlight-bg);
+            color: #fff;
+            border-color: var(--highlight-bg);
+            box-shadow: 0 0 15px var(--highlight-bg)
+        }
+        .input-field {
+            background: var(--input-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 14px 16px;
+            color: var(--text);
+            width: 100%;
+            margin: 8px 0;
+            outline: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            font-family: inherit;
+            resize: vertical;
+            backdrop-filter: blur(8px)
+        }
+        .input-field:focus {
+            border-color: var(--text-secondary);
+            box-shadow: 0 0 16px rgba(45, 212, 191, 0.25);
+            background: rgba(30, 45, 65, 0.85)
+        }
+        textarea.input-field {
+            min-height: 120px;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+            border-radius: 18px
+        }
+        .btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--text);
+            padding: 12px 18px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+            white-space: nowrap
+        }
+        .btn:hover {
+            box-shadow: 0 0 14px var(--text-secondary);
+            transform: translateY(-1px)
+        }
+        .btn:active {
+            transform: scale(0.96)
+        }
+        .btn-primary {
+            background: var(--highlight-bg);
+            color: #fff;
+            border: none;
+            font-weight: bold
+        }
+        .btn-danger {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--text);
+            border: 1px solid #f87171
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            border-radius: 20px
+        }
+        .btn-xs {
+            padding: 5px 10px;
+            font-size: 0.68rem;
+            border-radius: 14px
+        }
+        .btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none
+        }
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 0.9rem
+        }
+        .progress-bar {
+            height: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0
+        }
+        .progress {
+            height: 100%;
+            background: var(--highlight-bg);
+            width: 60%;
+            border-radius: 6px;
+            transition: width 0.4s
+        }
+        .chart-placeholder {
+            width: 100%;
+            height: 160px;
+            background: var(--card-bg);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            margin: 12px 0;
+            border: 1px dashed var(--border-glow);
+            font-size: 1.2rem;
+            position: relative
+        }
+        .chart-placeholder canvas {
+            max-width: 100%;
+            max-height: 100%
+        }
+        .diary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px
+        }
+        .diary-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid var(--border-glow);
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+        .diary-card:hover {
+            box-shadow: 0 8px 25px var(--border-glow);
+            transform: translateY(-2px)
+        }
+        .diary-card .date {
+            font-size: 0.75rem;
+            color: var(--text-secondary)
+        }
+        .diary-card .title {
+            font-weight: 600;
+            margin: 8px 0;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+        .diary-card .preview {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            max-height: 3.2em
+        }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-glow);
+            flex-wrap: wrap;
+            gap: 8px
+        }
+        .setting-item:last-child {
+            border-bottom: none
+        }
+        .conn-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px
+        }
+        .conn-dot.online {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success)
+        }
+        .conn-dot.offline {
+            background: var(--danger);
+            box-shadow: 0 0 8px var(--danger)
+        }
+        .hidden {
+            display: none !important
+        }
+
+        /* Modal 样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 200;
+            display: none;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            padding: 20px
+        }
+        .modal.show {
+            display: flex
+        }
+        .modal-card {
+            width: 94%;
+            max-width: 520px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--text-secondary)
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+        .tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 0.72rem;
+            background: var(--btn-bg);
+            margin: 2px 4px 2px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent
+        }
+        .tag.active {
+            background: var(--highlight-bg);
+            color: #fff;
+            border-color: var(--highlight-bg);
+            box-shadow: 0 0 10px var(--highlight-bg)
+        }
+        .tag:hover {
+            border-color: var(--text-secondary)
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 14px
+        }
+        .search-box input {
+            padding-left: 36px
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary)
+        }
+        .debt-section {
+            margin-bottom: 20px
+        }
+        .debt-section h4 {
+            margin-bottom: 8px;
+            color: var(--text-secondary)
+        }
+
+        /* 子任务列表样式 */
+        #subtaskList {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 4px 0
+        }
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            border-radius: 14px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-glow);
+            transition: 0.2s
+        }
+        .subtask-item:hover {
+            border-color: var(--text-secondary)
+        }
+        .subtask-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--highlight-bg);
+            cursor: pointer;
+            flex-shrink: 0
+        }
+        .subtask-item input[type="text"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 0.85rem;
+            outline: none;
+            padding: 4px 0;
+            font-family: inherit
+        }
+        .subtask-item button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            transition: 0.2s;
+            color: var(--text);
+            flex-shrink: 0
+        }
+        .subtask-item button:hover {
+            opacity: 1;
+            color: #f87171
+        }
+        .subtask-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05)
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+        .budget-item {
+            background: var(--input-bg);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-glow)
+        }
+        .pagination {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+        .pagination button {
+            padding: 6px 12px;
+            border-radius: 14px;
+            background: var(--btn-bg);
+            border: 1px solid var(--border-glow);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.75rem
+        }
+        .pagination button.active {
+            background: var(--highlight-bg);
+            color: #fff
+        }
+        .sub-page {
+            display: block
+        }
+        .sub-page.hidden {
+            display: none !important
+        }
+        .plan-sub {
+            display: block
+        }
+        .plan-sub.hidden {
+            display: none !important
+        }
+
+        /* 类型选择器按钮组 */
+        .type-btn-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 8px 0
+        }
+        .type-btn-group .type-opt {
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid var(--border-glow);
+            background: var(--btn-bg);
+            color: var(--text);
+            transition: 0.2s
+        }
+        .type-btn-group .type-opt.active {
+            background: var(--highlight-bg);
+            color: #fff;
+            border-color: var(--highlight-bg)
+        }
+        .type-opt[data-type="income"] {
+            border-left: 3px solid var(--income)
+        }
+        .type-opt[data-type="expense"] {
+            border-left: 3px solid var(--expense)
+        }
+        .type-opt[data-type="deposit"] {
+            border-left: 3px solid var(--deposit)
+        }
+        .type-opt[data-type="lend"] {
+            border-left: 3px solid var(--lend)
+        }
+        .type-opt[data-type="borrow"] {
+            border-left: 3px solid var(--borrow)
+        }
+
+        /* 照片预览容器 */
+        #imagePreviewContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0
+        }
+        #imagePreviewContainer>div {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--border-glow)
+        }
+        #imagePreviewContainer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+        .remove-image-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1
+        }
+        .diary-card img {
+            width: 100%;
+            border-radius: 14px;
+            margin-bottom: 8px;
+            max-height: 130px;
+            object-fit: cover
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-glow);
+            border-radius: 4px
+        }
+
+        @media(max-width:600px) {
+            .header h1 {
+                font-size: 1.4rem
+            }
+            .card {
+                padding: 14px
+            }
+            .modal-card {
+                padding: 16px;
+                border-radius: 22px
+            }
+            .diary-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="margin-bottom:0;">
+        <div class="header">
+            <h1>✨ 强韧生活</h1>
+            <div class="theme-selector" id="themeSelector">
+                <button class="theme-btn active" data-theme="dark">🌙</button>
+                <button class="theme-btn" data-theme="aurora">🌿</button>
+                <button class="theme-btn" data-theme="sunset">🌅</button>
+                <button class="theme-btn" data-theme="light-gray">☁️</button>
+                <button class="theme-btn" data-theme="sakura">🌸</button>
+                <button class="theme-btn" data-theme="ink">🖋️</button>
+                <button class="theme-btn" data-theme="mint">🍃</button>
+                <button class="theme-btn" data-theme="ocean">🌊</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="planPage" class="page active"></div>
+    <div id="diaryPage" class="page"></div>
+    <div id="financePage" class="page"></div>
+    <div id="settingsPage" class="page"></div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <button data-page="plan" class="active"><i class="fas fa-calendar-alt"></i><span>计划</span></button>
+        <button data-page="diary"><i class="fas fa-book"></i><span>日记</span></button>
+        <button data-page="finance"><i class="fas fa-chart-pie"></i><span>财务</span></button>
+        <button data-page="settings"><i class="fas fa-cog"></i><span>设置</span></button>
+    </div>
+
+    <script>
+    // ==================== 全局变量与 Supabase 初始化 ====================
+    // 👇 朋友专属 Supabase 配置
+    const SUPABASE_URL = 'https://yemvgjrjjltfjzrsieds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllbXZnanJqamx0Zmp6cnNpZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MTQ4NTQsImV4cCI6MjA5MzM5MDg1NH0.HHY_SoizypKKgOWksc6BqGYzaUQgvM6mo7KPbFCLH6Q';
+    const USER_ID = 'user_kaungmyat_fixed';
+    const LS_PREFIX = 'qiangren_';
+    const FINANCE_LS = 'cf_';
+
+    let supabase, cloudReady = false;
+    let currentView = 'plan';
+    let audioCtx = null;
+
+    function initSupabase() {
+        try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); return true; } catch (e) {
+            console.error('Supabase init failed');
+            return false;
+        }
+    }
+    async function testCloudConnection() {
+        if (!supabase) return false;
+        try { const { error } = await supabase.from('plan_data').select('id', { count: 'exact', head: true }).limit(
+                1); return !error; } catch { return false; }
+    }
+
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;',
+            '"': '&quot;', "'": '&#39;' })[m]); }
+
+    function loadJSON(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) :
+            fallback; } catch { return fallback; } }
+
+    function saveJSON(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {
+            console.warn('存储失败:', key, e); } }
+
+    function getWeekKey(d) { let date = new Date(d);
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7); let year = date.getFullYear(); let week = Math.floor((
+            (date - new Date(year, 0, 4)) / 86400000 + (new Date(year, 0, 4).getDay() + 6) % 7) / 7); return `${year}-W${week.toString().padStart(2,'0')}`; }
+
+    function getWeekDates(wk) { let [year, w] = wk.split('-W'); let jan4 = new Date(parseInt(year), 0, 4); let jan4Day =
+            jan4.getDay(); let monOffset = jan4Day === 0 ? -6 : 1 - jan4Day; let firstMon = new Date(jan4);
+        firstMon.setDate(jan4.getDate() + monOffset + (parseInt(w) - 1) * 7); let dates = []; for (let i = 0; i < 7; i++) { let d =
+                new Date(firstMon);
+            d.setDate(firstMon.getDate() + i);
+            dates.push(d.toISOString().slice(0, 10)); } return dates; }
+
+    function switchPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(page + 'Page').classList.add('active');
+        document.querySelectorAll('#bottomNav button').forEach(b => b.classList.remove('active'));
+        const navBtn = document.querySelector(`#bottomNav button[data-page="${page}"]`);
+        if (navBtn) navBtn.classList.add('active');
+        currentView = page;
+        if (page === 'plan') PlanModule.render();
+        else if (page === 'diary') DiaryModule.render();
+        else if (page === 'finance') FinanceModule.render();
+        else if (page === 'settings') SettingsModule.render();
+    }
+
+    document.querySelectorAll('#bottomNav button').forEach(btn => {
+        btn.addEventListener('click', () => switchPage(btn.dataset.page));
+    });
+
+    document.querySelectorAll('#themeSelector .theme-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const theme = this.dataset.theme;
+            document.body.className = 'theme-' + theme;
+            document.querySelectorAll('#themeSelector .theme-btn').forEach(b => b.classList.remove(
+                'active'));
+            this.classList.add('active');
+            PlanModule.setTheme(theme);
+        });
+    });
+
+    // ==================== 计划模块 ====================
+    const PlanModule = (function() {
+        let currentWeekKey, currentDates = [],
+            timeSlots = [],
+            tableData = [];
+        let localCache = {};
+        let mergedGroups = {};
+        let mergeMode = false,
+            mergeSelection = [];
+        let reminderEnabled = false,
+            reminderInterval = null;
+        let currentSubtaskContext = null;
+        let useHalfHour = true;
+        let lastRemindedSlot = null;
+
+        function genTimeSlots() {
+            let slots = [];
+            if (useHalfHour) {
+                for (let h = 5; h < 24; h++) { slots.push(`${h.toString().padStart(2,'0')}:00 - ${h.toString().padStart(2,'0')}:30`); if (
+                        h < 23) slots.push(
+                        `${h.toString().padStart(2,'0')}:30 - ${(h+1).toString().padStart(2,'0')}:00`);
+                    else slots.push(`23:30 - 24:00`); }
+            } else {
+                for (let h = 5; h < 24; h++) slots.push(
+                    `${h.toString().padStart(2,'0')}:00 - ${(h+1).toString().padStart(2,'0')}:00`);
+                slots.push(`23:00 - 24:00`);
+            }
+            return slots;
+        }
+
+        function defaultTask(h) { if (h >= 5 && h < 8) return '晨间日语'; if (h >= 8 && h < 12) return '工作/教学'; if (h >= 12 && h <
+                14) return '午餐休息'; if (h >= 14 && h < 18) return '下午备课'; if (h >= 18 && h < 22) return '晚间学习'; return '放松/睡眠'; }
+
+        function resetTableData() { timeSlots = genTimeSlots();
+            tableData = [
+                ['时间', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            ]; for (let t of timeSlots) { let hour = parseInt(t.split(':')[0]); let row = [t]; for (let i = 0; i < 7; i++) row.push(
+                    defaultTask(hour));
+                tableData.push(row); } }
+
+        function loadLocal() {
+            const saved = loadJSON(LS_PREFIX + currentWeekKey, null);
+            if (saved) { tableData = saved.table || tableData;
+                localCache = saved.cache || {}; }
+            mergedGroups = loadJSON(LS_PREFIX + 'merged_' + USER_ID, {});
+        }
+
+        function saveLocal() {
+            saveJSON(LS_PREFIX + currentWeekKey, { table: tableData, cache: localCache });
+            saveJSON(LS_PREFIX + 'merged_' + USER_ID, mergedGroups);
+        }
+
+        async function loadCloud() {
+            if (!cloudReady) return;
+            const { data, error } = await supabase.from('plan_data').select('date,cell_key,edited_text,subtasks').eq(
+                'user_id', USER_ID).eq('week_key', currentWeekKey);
+            if (error) return;
+            for (let item of data) {
+                let [row, col] = item.cell_key.split('_').map(Number);
+                let key = `${item.date}_${row}_${col}`;
+                localCache[key] = { text: item.edited_text || tableData[row + 1]?.[col] || '', subtasks: item.subtasks ||
+                        [] };
+                if (item.edited_text && tableData[row + 1]) tableData[row + 1][col] = item.edited_text;
+            }
+        }
+
+        async function saveCell(date, row, col, text, subtasks) {
+            if (!cloudReady) return;
+            await supabase.from('plan_data').upsert({
+                user_id: USER_ID,
+                week_key: currentWeekKey,
+                date,
+                cell_key: `${row}_${col}`,
+                edited_text: text,
+                subtasks,
+                updated_at: new Date()
+            }, { onConflict: 'user_id,date,cell_key' });
+        }
+
+        async function loadSettings() {
+            let theme = 'dark',
+                granularity = 'half';
+            if (cloudReady) {
+                const { data, error } = await supabase.from('user_settings').select('theme,granularity').eq('user_id',
+                    USER_ID).maybeSingle();
+                if (!error && data) { theme = data.theme || theme;
+                    granularity = data.granularity || granularity; }
+            }
+            theme = loadJSON('selectedTheme', theme);
+            granularity = loadJSON(LS_PREFIX + 'granularity', granularity);
+            setTheme(theme);
+            useHalfHour = granularity !== 'hour';
+            const granBtn = document.getElementById('granularityBtn');
+            if (granBtn) granBtn.textContent = useHalfHour ? '⏱️ 半小时' : '⏱️ 每小时';
+            saveJSON('selectedTheme', theme);
+            saveJSON(LS_PREFIX + 'granularity', granularity);
+        }
+
+        async function saveSettings(theme, granularity) {
+            saveJSON('selectedTheme', theme);
+            saveJSON(LS_PREFIX + 'granularity', granularity);
+            if (cloudReady) await supabase.from('user_settings').upsert({ user_id: USER_ID, theme, granularity,
+                updated_at: new Date() }, { onConflict: 'user_id' });
+        }
+
+        function setTheme(t) {
+            document.body.className = 'theme-' + t;
+            saveSettings(t, useHalfHour ? 'half' : 'hour');
+            document.querySelectorAll('#themeSelector .theme-btn').forEach(b => b.classList.remove('active'));
+            const tb = document.querySelector(`#themeSelector .theme-btn[data-theme="${t}"]`);
+            if (tb) tb.classList.add('active');
+        }
+
+        function saveReminderState() { saveJSON('reminderEnabled', reminderEnabled); }
+
+        function loadReminderState() {
+            if (loadJSON('reminderEnabled', false)) {
+                if (Notification.permission === 'granted') startReminder(false);
+                else if (Notification.permission === 'default') Notification.requestPermission().then(p => { if (p ===
+                        'granted') startReminder(false);
+                    else { reminderEnabled = false;
+                        saveReminderState(); } });
+                else { reminderEnabled = false;
+                    saveReminderState(); }
+            }
+        }
+
+        function startReminder(updateUI = true) {
+            reminderEnabled = true;
+            if (updateUI) { const btn = document.getElementById('reminderToggleBtn'); if (btn) btn.textContent =
+                    '🔔 提醒:开'; }
+            lastRemindedSlot = null;
+            checkReminders();
+            if (reminderInterval) clearInterval(reminderInterval);
+            reminderInterval = setInterval(checkReminders, 60000);
+            saveReminderState();
+        }
+
+        function stopReminder() {
+            reminderEnabled = false;
+            const btn = document.getElementById('reminderToggleBtn');
+            if (btn) btn.textContent = '🔕 提醒:关';
+            if (reminderInterval) clearInterval(reminderInterval);
+            saveReminderState();
+        }
+
+        function toggleReminder() {
+            if (!reminderEnabled) {
+                if (Notification.permission === 'default') Notification.requestPermission().then(p => { if (p ===
+                        'granted') startReminder(true);
+                    else alert('需要通知权限才能使用提醒功能'); });
+                else if (Notification.permission === 'granted') startReminder(true);
+                else alert('通知权限已拒绝，请在浏览器设置中允许通知');
+            } else stopReminder();
+        }
+
+        function getCurrentSlot() {
+            let now = new Date();
+            let curMin = now.getHours() * 60 + now.getMinutes();
+            let col = now.getDay() === 0 ? 7 : now.getDay();
+            for (let i = 0; i < timeSlots.length; i++) {
+                let parts = timeSlots[i].split(/[-–—]/);
+                if (parts.length < 2) continue;
+                let start = parts[0].trim().split(':');
+                let end = parts[1].trim().split(':');
+                if (start.length < 2 || end.length < 2) continue;
+                let sMin = parseInt(start[0]) * 60 + parseInt(start[1]),
+                    eMin = parseInt(end[0]) * 60 + parseInt(end[1]);
+                if (!isNaN(sMin) && !isNaN(eMin) && curMin >= sMin && curMin < eMin) return { row: i, col };
+            }
+            return null;
+        }
+
+        function highlightNow() {
+            document.querySelectorAll('#mainTable td.now-highlight').forEach(td => td.classList.remove(
+            'now-highlight'));
+            let slot = getCurrentSlot();
+            const banner = document.getElementById('currentTaskBanner');
+            const miniSub = document.getElementById('currentSubtasksMini');
+            if (!slot) {
+                if (banner) banner.textContent = '✨ 暂无当前计划';
+                if (miniSub) miniSub.innerHTML =
+                    '<span style="opacity:0.5;">暂无可显示的子任务</span>';
+                return;
+            }
+            let { row, col } = slot;
+            let date = currentDates[col - 1];
+            if (!date) { if (banner) banner.textContent = '✨ 暂无计划'; if (miniSub) miniSub.innerHTML =
+                    '<span style="opacity:0.5;">暂无可显示的子任务</span>'; return; }
+            let cellKey = `${date}_${row}_${col}`;
+            let gid = null;
+            for (let [g, group] of Object.entries(mergedGroups)) { if (group.cells.includes(cellKey)) { gid = g; break; } }
+            let taskText = '';
+            if (gid) {
+                let group = mergedGroups[gid];
+                let [mdate, mrc] = group.masterKey.split(/_(.+)/);
+                let [mr, mc] = mrc.split('_').map(Number);
+                taskText = tableData[mr + 1]?.[mc] || '';
+                let masterCell = document.querySelector(`td[data-merge-gid="${gid}"]`);
+                if (masterCell) masterCell.classList.add('now-highlight');
+            } else {
+                taskText = tableData[row + 1]?.[col] || '';
+                let cell = document.querySelector(`td[data-cellkey="${cellKey}"]`);
+                if (cell) cell.classList.add('now-highlight');
+            }
+            if (banner) banner.textContent = '✨ ' + (taskText || '暂无计划');
+            // 显示子任务
+            if (miniSub) {
+                let data = localCache[cellKey];
+                let subtasks = data?.subtasks || [];
+                if (subtasks.length > 0) {
+                    miniSub.innerHTML = subtasks.map(s =>
+                        `<span class="mini-sub${s.done?' done':''}">${s.done?'✅':'⬜'} ${escapeHtml(s.text)}</span>`
+                        ).join('');
+                } else {
+                    miniSub.innerHTML =
+                        '<span style="opacity:0.5;">当前时间段暂无子任务</span>';
+                }
+            }
+        }
+
+        function checkReminders() {
+            if (!reminderEnabled) return;
+            let slot = getCurrentSlot();
+            if (!slot) return;
+            let { row, col } = slot;
+            let date = currentDates[col - 1];
+            if (!date) return;
+            let cellKey = `${date}_${row}_${col}`;
+            let slotId = `${currentWeekKey}_${row}_${col}`;
+            if (lastRemindedSlot === slotId) return;
+            let taskText = '';
+            let gid = null;
+            for (let [g, group] of Object.entries(mergedGroups)) { if (group.cells.includes(cellKey)) { gid = g; break; } }
+            if (gid) { let group = mergedGroups[gid]; let [mdate, mrc] = group.masterKey.split(/_(.+)/); let [mr, mc] =
+                    mrc.split('_').map(Number);
+                taskText = tableData[mr + 1]?.[mc] || ''; } else { taskText = tableData[row + 1]?.[col] || ''; }
+            let data = localCache[cellKey];
+            let hasUnfinished = data?.subtasks?.some(s => !s.done);
+            if (Notification.permission === 'granted') {
+                try {
+                    new Notification(hasUnfinished ? '⏰ 待办提醒' : '⏰ 计划提醒', {
+                        body: `${timeSlots[row]} — ${taskText}`,
+                        icon: 'icon-512.png',
+                        silent: false
+                    });
+                } catch (e) { console.warn('通知发送失败:', e); }
+                playBeep();
+            }
+            lastRemindedSlot = slotId;
+            highlightNow();
+        }
+
+        function playBeep() {
+            try {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                const now = audioCtx.currentTime;
+                const notes = [{ freq: 523.25, time: 0 }, { freq: 659.25, time: 0.2 }, { freq: 783.99, time: 0.4 },
+                    { freq: 1046.5, time: 0.7 }
+                ];
+                notes.forEach(n => {
+                    let osc = audioCtx.createOscillator(),
+                        gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = n.freq;
+                    gain.gain.setValueAtTime(0.4, now + n.time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + n.time + 0.5);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + n.time);
+                    osc.stop(now + n.time + 0.5);
+                });
+            } catch (e) {}
+        }
+
+        function renderTable() {
+            const thead = document.getElementById('tableHead'),
+                tbody = document.getElementById('tableBody');
+            if (!thead || !tbody) return;
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            let trH = document.createElement('tr');
+            tableData[0].forEach(h => { let th = document.createElement('th');
+                th.textContent = h;
+                trH.appendChild(th); });
+            thead.appendChild(trH);
+            let mergeMap = {};
+            for (let [gid, group] of Object.entries(mergedGroups)) for (let ck of group.cells) mergeMap[ck] = gid;
+            let skipCells = new Set();
+            for (let r = 1; r < tableData.length; r++) {
+                let tr = document.createElement('tr');
+                for (let c = 0; c < tableData[r].length; c++) {
+                    if (skipCells.has(`${r}_${c}`)) continue;
+                    let cellKey = c === 0 ? null : `${currentDates[c-1]}_${r-1}_${c}`;
+                    let gid = cellKey ? mergeMap[cellKey] : null,
+                        group = gid ? mergedGroups[gid] : null,
+                        isMaster = group && group.masterKey === cellKey;
+                    let cell = c === 0 ? document.createElement('th') : document.createElement('td');
+                    let text = tableData[r][c] || '';
+                    cell.setAttribute('data-row', r - 1);
+                    cell.setAttribute('data-col', c);
+                    if (c > 0) { cell.setAttribute('data-date', currentDates[c - 1]);
+                        cell.setAttribute('data-cellkey', cellKey); }
+                    if (isMaster) { cell.setAttribute('rowspan', group.rowspan);
+                        cell.setAttribute('colspan', group.colspan);
+                        cell.setAttribute('data-merge-gid', gid);
+                        cell.classList.add('merge-master'); for (let dr = 0; dr < group.rowspan; dr++) for (let dc = 0; dc <
+                            group.colspan; dc++) if (dr !== 0 || dc !== 0) skipCells.add(`${r+dr}_${c+dc}`); }
+                    let subtaskInfo = '';
+                    if (cellKey && localCache[cellKey]?.subtasks?.length > 0) { let subs = localCache[cellKey].subtasks;
+                        let done = subs.filter(s => s.done).length;
+                        subtaskInfo =
+                            `<span class="subtask-count">${done}/${subs.length}</span>`; }
+                    cell.innerHTML =
+                        `<div class="cell-content"><span>${escapeHtml(text)}</span>${subtaskInfo}</div>`;
+                    tr.appendChild(cell);
+                }
+                tbody.appendChild(tr);
+            }
+            attachCellEvents();
+            highlightNow();
+        }
+
+        function attachCellEvents() { document.querySelectorAll('#mainTable td').forEach(cell => { cell.onclick = (e) =>
+                handleCellClick(cell, e); }); }
+
+        function handleCellClick(cell, e) { if (mergeMode) { toggleMergeSelection(cell); return; } let row = parseInt(cell
+                .dataset.row),
+                col = parseInt(cell.dataset.col); if (col === 0 || isNaN(row)) return;
+            openSubtaskModal(cell.dataset.date, row, col, cell.dataset.cellkey); }
+
+        function toggleMergeSelection(cell) { let ck = cell.dataset.cellkey; if (!ck) return; let idx = mergeSelection.indexOf(
+                ck); if (idx >= 0) { mergeSelection.splice(idx, 1);
+                cell.classList.remove('selected-cell'); } else { mergeSelection.push(ck);
+                cell.classList.add('selected-cell'); }
+            document.getElementById('applyMergeBtn').disabled = mergeSelection.length < 2;
+            document.getElementById('mergeHint').textContent = mergeSelection.length ? `已选${mergeSelection.length}个` : ''; }
+
+        function applyMerge() { if (mergeSelection.length < 2) return; let cells = mergeSelection.map(ck => { let [date, rc] =
+                    ck.split(/_(.+)/); let [r, c] = rc.split('_').map(Number); return { date, row: r, col: c, key: ck }; });
+            let minRow = Math.min(...cells.map(c => c.row)),
+                minCol = Math.min(...cells.map(c => c.col)),
+                maxRow = Math.max(...cells.map(c => c.row)),
+                maxCol = Math.max(...cells.map(c => c.col)); let master = cells.find(c => c.row === minRow && c.col ===
+                minCol);
+            mergedGroups[Date.now().toString()] = { masterKey: master.key, cells: cells.map(c => c.key), rowspan: maxRow -
+                    minRow + 1, colspan: maxCol - minCol + 1 };
+            saveJSON(LS_PREFIX + 'merged_' + USER_ID, mergedGroups);
+            exitMergeMode();
+            renderTable(); }
+
+        function exitMergeMode() { mergeMode = false;
+            mergeSelection = [];
+            document.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell'));
+            document.getElementById('mergeModeBtn').textContent = '🔲 合并模式';
+            document.getElementById('applyMergeBtn').disabled = true;
+            document.getElementById('cancelMergeBtn').disabled = true;
+            document.getElementById('mergeHint').textContent = ''; }
+
+        function openSubtaskModal(date, row, col, cellKey) {
+            currentSubtaskContext = { date, row, col, cellKey }; let data = localCache[cellKey] || { text: tableData[row + 1][
+                    col
+                ], subtasks: [] };
+            document.getElementById('mainTaskInput').value = data.text || ''; let listDiv = document.getElementById(
+                'subtaskList');
+            listDiv.innerHTML = '';
+            (data.subtasks || []).forEach(st => { let div = document.createElement('div');
+                div.className = 'subtask-item';
+                div.innerHTML =
+                    `<input type="checkbox" ${st.done?'checked':''}><input type="text" value="${escapeHtml(st.text)}"><button>🗑</button>`;
+                div.querySelector('button').onclick = () => div.remove();
+                listDiv.appendChild(div); });
+            let unmergeBtn = document.getElementById('unmergeCellBtn');
+            let gid = null; for (let [g, group] of Object.entries(mergedGroups)) if (group.cells.includes(cellKey)) { gid =
+                    g; break; }
+            unmergeBtn.style.display = gid ? 'block' : 'none';
+            unmergeBtn.onclick = () => { if (confirm('取消合并？')) { delete mergedGroups[gid];
+                    saveJSON(LS_PREFIX + 'merged_' + USER_ID, mergedGroups);
+                    document.getElementById('subtaskModal').style.display = 'none';
+                    renderTable(); } };
+            document.getElementById('subtaskModal').style.display = 'flex';
+        }
+
+        async function saveSubtasksAndClose() {
+            if (!currentSubtaskContext) return;
+            let { date, row, col, cellKey } = currentSubtaskContext;
+            let mainText = document.getElementById('mainTaskInput').value.trim();
+            if (mainText) tableData[row + 1][col] = mainText;
+            let subtasks = [];
+            document.querySelectorAll('#subtaskList .subtask-item').forEach(div => { let cb = div.querySelector(
+                    'input[type="checkbox"]'); let inp = div.querySelector('input[type="text"]');
+                subtasks.push({ text: inp.value, done: cb.checked }); });
+            localCache[cellKey] = { text: mainText || tableData[row + 1][col], subtasks };
+            saveLocal();
+            await saveCell(date, row, col, mainText || tableData[row + 1][col], subtasks);
+            document.getElementById('subtaskModal').style.display = 'none';
+            currentSubtaskContext = null;
+            renderTable();
+        }
+
+        function renderTasksPage(filter = 'unfinished', weekKey = null) {
+            let content = document.getElementById('tasksPageContent');
+            if (!content) return;
+            content.innerHTML = '';
+            let allTasks = [];
+            let targetWeek = weekKey || currentWeekKey;
+            // 从localCache中收集（仅当前周）
+            let cacheSource = (targetWeek === currentWeekKey) ? localCache : (loadJSON(LS_PREFIX + targetWeek, {})
+                .cache || {});
+            for (let [key, val] of Object.entries(cacheSource)) {
+                if (!val.subtasks) continue;
+                let [date, rc] = key.split(/_(.+)/);
+                let [row, col] = rc.split('_').map(Number);
+                val.subtasks.forEach(st => { allTasks.push({ date, time: timeSlots[row] || '', task: st.text, done: st
+                        .done, cellKey: key }); });
+            }
+            if (filter === 'unfinished') allTasks = allTasks.filter(t => !t.done);
+            else if (filter === 'finished') allTasks = allTasks.filter(t => t.done);
+            allTasks.sort((a, b) => b.date.localeCompare(a.date) || a.time.localeCompare(b.time));
+            if (!allTasks.length) { content.innerHTML =
+                '<p style="padding:20px;text-align:center;opacity:0.6;">📭 暂无符合条件的待办</p>'; return; }
+            allTasks.forEach(t => { let div = document.createElement('div');
+                div.className = 'subtask-item';
+                div.innerHTML =
+                    `<input type="checkbox" ${t.done?'checked':''} data-key="${t.cellKey}" data-text="${escapeHtml(t.task)}"><span style="flex:1;font-size:0.82rem;">${escapeHtml(t.date)} ${t.time} — ${escapeHtml(t.task)}</span>`;
+                div.querySelector('input').onchange = async (e) => { let ck = e.target.dataset.key,
+                        taskText = e.target.dataset.text; let data = localCache[ck]; if (data?.subtasks) { let st =
+                            data.subtasks.find(s => s.text === taskText); if (st) st.done = e.target
+                        .checked; let [date2, rc2] = ck.split(/_(.+)/); let [row2, col2] = rc2.split('_')
+                        .map(Number); await saveCell(date2, row2, col2, data.text, data.subtasks);
+                        saveLocal();
+                        renderTasksPage(filter, targetWeek);
+                        renderTable(); } };
+                content.appendChild(div); });
+        }
+
+        async function loadHistoryWeeks() {
+            const select = document.getElementById('historyWeekSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            let weeks = new Set();
+            weeks.add(currentWeekKey);
+            // 从localStorage收集所有周
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith(LS_PREFIX) && key.includes('-W') && !key.includes('merged') && !key.includes(
+                        'granularity')) {
+                    weeks.add(key.replace(LS_PREFIX, ''));
+                }
+            }
+            if (cloudReady) {
+                const { data, error } = await supabase.from('plan_data').select('week_key').eq('user_id', USER_ID).order(
+                    'week_key', { ascending: false });
+                if (!error) data.forEach(d => weeks.add(d.week_key));
+            }
+            let sortedWeeks = [...weeks].sort().reverse();
+            sortedWeeks.forEach(w => { let opt = document.createElement('option');
+                opt.value = w;
+                opt.textContent = w;
+                select.appendChild(opt); });
+            if (sortedWeeks.length) select.value = sortedWeeks[0];
+            select.onchange = () => renderHistory(select.value);
+            renderHistory(select.value);
+        }
+
+        async function renderHistory(wk) {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+            content.innerHTML = '';
+            if (!wk) { content.innerHTML =
+                '<p style="padding:20px;text-align:center;opacity:0.6;">📜 请选择历史周</p>'; return; }
+            const dates = getWeekDates(wk);
+            let allSubtasks = [];
+            // 从本地加载
+            let localData = loadJSON(LS_PREFIX + wk, {});
+            let cache = localData.cache || {};
+            for (let [key, val] of Object.entries(cache)) {
+                if (!val.subtasks) continue;
+                let [date, rc] = key.split(/_(.+)/);
+                let [row, col] = rc.split('_').map(Number);
+                val.subtasks.forEach(st => { allSubtasks.push({ date, time: timeSlots[row] || '', task: st.text, done: st
+                        .done }); });
+            }
+            // 从云端加载
+            if (cloudReady) {
+                const { data, error } = await supabase.from('plan_data').select('date,cell_key,subtasks').eq('user_id',
+                    USER_ID).eq('week_key', wk);
+                if (!error && data) {
+                    for (let item of data) {
+                        let [row, col] = item.cell_key.split('_').map(Number);
+                        (item.subtasks || []).forEach(st => {
+                            if (!allSubtasks.some(t => t.date === item.date && t.time === (timeSlots[
+                                    row] || '') && t.task === st.text)) {
+                                allSubtasks.push({ date: item.date, time: timeSlots[row] || '',
+                                    task: st.text, done: st.done });
+                            }
+                        });
+                    }
+                }
+            }
+            if (!allSubtasks.length) { content.innerHTML =
+                '<p style="padding:20px;text-align:center;opacity:0.6;">📭 该周无子任务记录</p>'; return; }
+            allSubtasks.sort((a, b) => b.date.localeCompare(a.date) || a.time.localeCompare(b.time));
+            // 添加筛选标签
+            let filterBar = document.createElement('div');
+            filterBar.className = 'sub-tabs';
+            filterBar.style.marginBottom = '12px';
+            filterBar.innerHTML = `
+            <button class="sub-tab active" data-histfilter="all">全部</button>
+            <button class="sub-tab" data-histfilter="unfinished">未完成</button>
+            <button class="sub-tab" data-histfilter="finished">已完成</button>`;
+            content.appendChild(filterBar);
+            let listDiv = document.createElement('div');
+            listDiv.id = 'historyListContent';
+            content.appendChild(listDiv);
+
+            function renderFiltered(f) {
+                let filtered = allSubtasks;
+                if (f === 'unfinished') filtered = allSubtasks.filter(t => !t.done);
+                else if (f === 'finished') filtered = allSubtasks.filter(t => t.done);
+                listDiv.innerHTML = filtered.map(t =>
+                    `<div class="subtask-row"><span>${t.done?'✅':'⬜'}</span><span style="flex:1;">${escapeHtml(t.date)} ${t.time} — ${escapeHtml(t.task)}</span></div>`
+                ).join('') || '<p style="padding:10px;opacity:0.6;">📭 无记录</p>';
+            }
+            renderFiltered('all');
+            filterBar.querySelectorAll('.sub-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    filterBar.querySelectorAll('.sub-tab').forEach(t => t.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    renderFiltered(this.dataset.histfilter);
+                });
+            });
+        }
+
+        function toggleGranularity() {
+            useHalfHour = !useHalfHour;
+            document.getElementById('granularityBtn').textContent = useHalfHour ? '⏱️ 半小时' : '⏱️ 每小时';
+            saveSettings(document.body.className.replace('theme-', '') || 'dark', useHalfHour ? 'half' : 'hour');
+            if (confirm('切换粒度会重置表格默认内容，子任务和自定义主任务会丢失。确定继续吗？')) { localCache = {};
+                saveLocal();
+                resetTableData();
+                renderTable(); } else { useHalfHour = !useHalfHour;
+                document.getElementById('granularityBtn').textContent = useHalfHour ? '⏱️ 半小时' : '⏱️ 每小时';
+                resetTableData(); }
+        }
+
+        function newWeek() {
+            if (!confirm('开始新的一周？当前周数据已保存。')) return;
+            saveLocal();
+            currentWeekKey = getWeekKey(new Date());
+            currentDates = getWeekDates(currentWeekKey);
+            localCache = {};
+            resetTableData();
+            loadCloud().then(() => { saveLocal();
+                renderTable(); });
+        }
+
+        function exportCSV() {
+            let rows = [
+                ['时间', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            ];
+            for (let r = 1; r < tableData.length; r++) rows.push([...tableData[r]]);
+            let csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+            let blob = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `plan_${currentWeekKey}.csv`;
+            a.click();
+        }
+
+        function importCSV() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            input.onchange = async (e) => {
+                let file = e.target.files[0];
+                if (!file) return;
+                let text = await file.text();
+                let lines = text.trim().split('\n');
+                if (lines.length < 2) return alert('CSV无效');
+                let header = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                if (header[0] !== '时间' || header.length !== 8) return alert('CSV格式不正确');
+                let newData = [header];
+                for (let i = 1; i < lines.length; i++) { let cols = lines[i].split(',').map(c => c.replace(/"/g, '')
+                        .trim());
+                    newData.push(cols); }
+                if (!confirm('导入将覆盖当前表格数据，确定继续？')) return;
+                mergedGroups = {};
+                saveLocal();
+                tableData = newData;
+                localCache = {};
+                saveLocal();
+                renderTable();
+            };
+            input.click();
+        }
+
+        function render() {
+            document.getElementById('planPage').innerHTML = `
+          <div class="container">
+            <div class="current-task-banner" id="currentTaskBanner" title="点击查看详情">✨ 加载中…</div>
+            <div class="current-subtasks-mini" id="currentSubtasksMini"><span style="opacity:0.5;">加载子任务中…</span></div>
+            <div class="sub-tabs" id="planTabs">
+              <button class="sub-tab active" data-plansub="plan-table">📅 计划表</button>
+              <button class="sub-tab" data-plansub="plan-tasks">📋 待办汇总</button>
+              <button class="sub-tab" data-plansub="plan-history">📜 历史回顾</button>
+            </div>
+            <div id="plan-table" class="plan-sub">
+              <div class="card" style="overflow-x:auto;">
+                <table id="mainTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+                <button class="btn btn-sm" id="mergeModeBtn">🔲 合并模式</button>
+                <button class="btn btn-sm" id="applyMergeBtn" disabled>✅ 应用合并</button>
+                <button class="btn btn-sm" id="cancelMergeBtn" disabled>↩️ 取消</button>
+                <span id="mergeHint" style="font-size:0.7rem;align-self:center;opacity:0.7;"></span>
+                <button class="btn btn-sm" id="granularityBtn">⏱️ 半小时</button>
+                <button class="btn btn-sm" id="newWeekBtn">📅 新周</button>
+                <button class="btn btn-sm" id="exportBtn">📎 导出</button>
+                <button class="btn btn-sm" id="importBtn">📂 导入</button>
+                <button class="btn btn-sm" id="reminderToggleBtn">🔔 提醒</button>
+                <button class="btn btn-sm" id="syncPlanBtn">🔄 同步</button>
+              </div>
+            </div>
+            <div id="plan-tasks" class="plan-sub hidden">
+              <div class="card">
+                <h3>📋 所有待办</h3>
+                <div style="display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap;">
+                  <span style="font-size:0.75rem;opacity:0.7;">周:</span>
+                  <select id="tasksWeekSelect" class="input-field" style="width:auto;margin:0;padding:8px 12px;"></select>
+                </div>
+                <div class="sub-tabs" style="margin-top:8px;">
+                  <button class="sub-tab active" id="filterUnfinished">未完成</button>
+                  <button class="sub-tab" id="filterFinished">已完成</button>
+                  <button class="sub-tab" id="filterAll">全部</button>
+                </div>
+                <div id="tasksPageContent" style="margin-top:14px;max-height:55vh;overflow-y:auto;"></div>
+              </div>
+            </div>
+            <div id="plan-history" class="plan-sub hidden">
+              <div class="card">
+                <h3>📜 历史待办</h3>
+                <select id="historyWeekSelect" class="input-field" style="margin:12px 0;width:auto;"></select>
+                <div id="historyContent" style="max-height:55vh;overflow-y:auto;"></div>
+              </div>
+            </div>
+          </div>
+          <div id="subtaskModal" class="modal" style="display:none;">
+            <div class="modal-card">
+              <div class="modal-header"><h3>📝 编辑任务与子任务</h3><button id="closeSubtask" style="background:none;border:none;font-size:1.5rem;color:var(--text);cursor:pointer;">✖</button></div>
+              <label style="font-size:0.8rem;opacity:0.7;">主任务标题</label>
+              <input type="text" id="mainTaskInput" class="input-field" placeholder="输入任务名称…">
+              <label style="font-size:0.8rem;opacity:0.7;margin-top:8px;">子任务清单</label>
+              <div id="subtaskList"></div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <input type="text" id="newSubtaskInput" class="input-field" placeholder="添加新子任务…" style="margin:0;">
+                <button id="addSubtaskBtn" class="btn btn-sm btn-primary">➕ 添加</button>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+                <button id="saveSubtaskClose" class="btn btn-primary" style="flex:1;">保存并关闭</button>
+                <button id="unmergeCellBtn" class="btn btn-sm" style="flex:1;display:none;">🔓 取消合并</button>
+              </div>
+            </div>
+          </div>`;
+
+            resetTableData();
+            currentWeekKey = getWeekKey(new Date());
+            currentDates = getWeekDates(currentWeekKey);
+            loadLocal();
+            loadCloud().then(() => { saveLocal();
+                renderTable(); });
+            loadReminderState();
+            const reminderBtn = document.getElementById('reminderToggleBtn');
+            if (reminderBtn) reminderBtn.textContent = reminderEnabled ? '🔔 提醒:开' : '🔕 提醒:关';
+            bindEvents();
+            setInterval(highlightNow, 60000);
+            // 点击横幅打开当前子任务
+            document.getElementById('currentTaskBanner').addEventListener('click', () => {
+                let slot = getCurrentSlot();
+                if (slot) {
+                    let { row, col } = slot;
+                    let date = currentDates[col - 1];
+                    if (date) openSubtaskModal(date, row, col,
+                        `${date}_${row}_${col}`);
+                }
+            });
+        }
+
+        function bindEvents() {
+            document.querySelectorAll('#planTabs .sub-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const sub = this.dataset.plansub;
+                    document.querySelectorAll('#planTabs .sub-tab').forEach(t => t.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.plan-sub').forEach(sp => sp.classList.add('hidden'));
+                    document.getElementById(sub).classList.remove('hidden');
+                    if (sub === 'plan-tasks') {
+                        populateTasksWeekSelect();
+                        renderTasksPage('unfinished', document.getElementById('tasksWeekSelect')
+                            ?.value || currentWeekKey);
+                    } else if (sub === 'plan-history') loadHistoryWeeks();
+                });
+            });
+            document.getElementById('mergeModeBtn').addEventListener('click', () => { mergeMode = !mergeMode; if (
+                    mergeMode) { document.getElementById('mergeModeBtn').textContent = '🔲 退出合并';
+                    document.getElementById('cancelMergeBtn').disabled = false; } else exitMergeMode(); });
+            document.getElementById('applyMergeBtn').addEventListener('click', applyMerge);
+            document.getElementById('cancelMergeBtn').addEventListener('click', exitMergeMode);
+            document.getElementById('granularityBtn').addEventListener('click', toggleGranularity);
+            document.getElementById('newWeekBtn').addEventListener('click', newWeek);
+            document.getElementById('exportBtn').addEventListener('click', exportCSV);
+            document.getElementById('importBtn').addEventListener('click', importCSV);
+            document.getElementById('reminderToggleBtn').addEventListener('click', toggleReminder);
+            document.getElementById('syncPlanBtn').addEventListener('click', async () => { cloudReady =
+                    await testCloudConnection();
+                await loadCloud();
+                saveLocal();
+                renderTable();
+                alert(cloudReady ? '同步完成 ✅' : '无法连接云端，已保存本地');
+                const rb = document.getElementById('reminderToggleBtn'); if (rb) rb.textContent = reminderEnabled ?
+                    '🔔 提醒:开' : '🔕 提醒:关'; });
+            document.getElementById('closeSubtask').addEventListener('click', () => { document.getElementById(
+                    'subtaskModal').style.display = 'none';
+                currentSubtaskContext = null; });
+            document.getElementById('saveSubtaskClose').addEventListener('click', saveSubtasksAndClose);
+            document.getElementById('addSubtaskBtn').addEventListener('click', () => { let inp = document.getElementById(
+                    'newSubtaskInput'); let text = inp.value.trim(); if (!text) return; let div = document.createElement(
+                    'div');
+                div.className = 'subtask-item';
+                div.innerHTML =
+                    `<input type="checkbox"><input type="text" value="${escapeHtml(text)}"><button>🗑</button>`;
+                div.querySelector('button').onclick = () => div.remove();
+                document.getElementById('subtaskList').appendChild(div);
+                inp.value = '';
+                inp.focus(); });
+            document.getElementById('filterUnfinished').addEventListener('click', () => {
+                document.querySelectorAll('#plan-tasks .sub-tabs .sub-tab').forEach(t => t.classList.remove(
+                    'active'));
+                document.getElementById('filterUnfinished').classList.add('active');
+                renderTasksPage('unfinished', document.getElementById('tasksWeekSelect')?.value || currentWeekKey);
+            });
+            document.getElementById('filterFinished').addEventListener('click', () => {
+                document.querySelectorAll('#plan-tasks .sub-tabs .sub-tab').forEach(t => t.classList.remove(
+                    'active'));
+                document.getElementById('filterFinished').classList.add('active');
+                renderTasksPage('finished', document.getElementById('tasksWeekSelect')?.value || currentWeekKey);
+            });
+            document.getElementById('filterAll').addEventListener('click', () => {
+                document.querySelectorAll('#plan-tasks .sub-tabs .sub-tab').forEach(t => t.classList.remove(
+                    'active'));
+                document.getElementById('filterAll').classList.add('active');
+                renderTasksPage('all', document.getElementById('tasksWeekSelect')?.value || currentWeekKey);
+            });
+            // 待办汇总周选择器
+            const tasksWeekSelect = document.getElementById('tasksWeekSelect');
+            if (tasksWeekSelect) {
+                tasksWeekSelect.addEventListener('change', () => {
+                    const activeFilter = document.querySelector('#plan-tasks .sub-tabs .sub-tab.active');
+                    const f = activeFilter ? (activeFilter.id === 'filterFinished' ? 'finished' : activeFilter
+                        .id === 'filterAll' ? 'all' : 'unfinished') : 'unfinished';
+                    renderTasksPage(f, tasksWeekSelect.value);
+                });
+            }
+        }
+
+        function populateTasksWeekSelect() {
+            const select = document.getElementById('tasksWeekSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            let weeks = new Set();
+            weeks.add(currentWeekKey);
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith(LS_PREFIX) && key.includes('-W') && !key.includes('merged') && !key.includes(
+                        'granularity')) {
+                    weeks.add(key.replace(LS_PREFIX, ''));
+                }
+            }
+            let sortedWeeks = [...weeks].sort().reverse();
+            sortedWeeks.forEach(w => { let opt = document.createElement('option');
+                opt.value = w;
+                opt.textContent = w;
+                select.appendChild(opt); });
+            if (sortedWeeks.length) select.value = sortedWeeks[0];
+        }
+
+        return {
+            render,
+            setTheme,
+            loadSettings,
+            loadCloud,
+            currentWeekKey,
+            useHalfHour,
+            reminderEnabled,
+            toggleReminder,
+            saveSettings,
+            resetTableData,
+            renderTable,
+            get currentWeekKeyVal() { return currentWeekKey; }
+        };
+    })();
+
+    // ==================== 日记模块 ====================
+    const DiaryModule = (function() {
+        let diaries = [];
+        let currentDiaryId = null;
+        let selectedImageFiles = [];
+        let diaryCategories = loadJSON(LS_PREFIX + 'diary_categories', ['学习', '健身', '阅读', '生活', '工作', '其他']);
+        let activeCategory = 'all';
+
+        async function loadDiaries() {
+            if (cloudReady) {
+                const { data, error } = await supabase.from('diary').select('*').eq('user_id', USER_ID).order('date', {
+                    ascending: false });
+                if (!error && data) diaries = data;
+            }
+            if (!diaries.length) diaries = loadJSON(LS_PREFIX + 'diaries', []);
+            saveJSON(LS_PREFIX + 'diaries', diaries);
+        }
+
+        async function saveDiary(entry) {
+            if (cloudReady) {
+                if (entry.id) await supabase.from('diary').update(entry).eq('id', entry.id);
+                else { const { data, error } = await supabase.from('diary').insert(entry).select(); if (!error && data)
+                        entry.id = data[0].id; }
+            }
+            if (entry.id) { const idx = diaries.findIndex(d => d.id === entry.id); if (idx >= 0) diaries[idx] =
+                    entry;
+                else diaries.unshift(entry); } else { entry.id = Date.now();
+                diaries.unshift(entry); }
+            saveJSON(LS_PREFIX + 'diaries', diaries);
+        }
+
+        async function deleteDiary(id) {
+            diaries = diaries.filter(d => d.id !== id);
+            if (cloudReady) await supabase.from('diary').delete().eq('id', id);
+            saveJSON(LS_PREFIX + 'diaries', diaries);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('diaryGrid');
+            if (!grid) return;
+            let filtered = activeCategory === 'all' ? diaries : diaries.filter(d => (d.category || '其他') ===
+                activeCategory);
+            if (!filtered.length) { grid.innerHTML =
+                '<p style="padding:20px;text-align:center;opacity:0.6;">📓 还没有日记，点击"＋ 写日记"开始吧。</p>'; return; }
+            grid.innerHTML = filtered.map(d => `
+            <div class="diary-card" data-id="${d.id}">
+              ${d.image_urls?.length ? `<img src="${d.image_urls[0]}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+              <div class="date">${d.date} ${d.category? '· '+d.category:''}</div>
+              <div class="title">${escapeHtml(d.title||'无标题')}</div>
+              <div class="preview">${escapeHtml((d.content||'').substring(0,100))}</div>
+            </div>`).join('');
+            document.querySelectorAll('.diary-card').forEach(card => card.addEventListener('click', () => openEditor(
+                parseInt(card.dataset.id))));
+        }
+
+        function openEditor(id) {
+            const entry = id ? diaries.find(d => d.id === id) : null;
+            currentDiaryId = id || null;
+            selectedImageFiles = [];
+            let modal = document.getElementById('diaryEditModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'diaryEditModal';
+                modal.className = 'modal';
+                document.body.appendChild(modal);
+            }
+            const existingUrls = entry?.image_urls || [];
+            modal.innerHTML = `
+            <div class="modal-card" style="max-width:600px;">
+              <div class="modal-header"><h3>${id?'编辑日记':'✍️ 新日记'}</h3><button id="closeDiaryEdit" style="background:none;border:none;font-size:1.5rem;color:var(--text);cursor:pointer;">✖</button></div>
+              <input type="date" id="diaryDate" class="input-field" value="${entry?.date||new Date().toISOString().slice(0,10)}">
+              <input type="text" id="diaryTitle" class="input-field" placeholder="日记标题…" value="${entry?.title||''}">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0;">
+                <span style="font-size:0.75rem;opacity:0.7;">分类：</span>
+                <select id="diaryCategorySelect" class="input-field" style="width:auto;margin:0;padding:10px 14px;">
+                  ${diaryCategories.map(c=>`<option value="${c}" ${(entry?.category||'其他')===c?'selected':''}>${c}</option>`).join('')}
+                </select>
+                <button id="addDiaryCategoryBtn" class="btn btn-xs" title="新增分类">➕ 新分类</button>
+              </div>
+              <textarea id="diaryContent" class="input-field" rows="10" placeholder="今天发生了什么呢…记录下来吧 ✍️">${entry?.content||''}</textarea>
+              <button id="addDiaryImageBtn" class="btn btn-sm" style="margin:8px 0;">📷 添加照片</button>
+              <input type="file" id="diaryImageInput" accept="image/*" multiple style="display:none;">
+              <div id="imagePreviewContainer">${existingUrls.map(url=>`<div><img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"><button class="remove-image-btn" data-url="${url}">x</button></div>`).join('')}</div>
+              <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+                <button id="saveDiaryBtn" class="btn btn-primary" style="flex:1;">💾 保存</button>
+                ${id?`<button id="deleteDiaryBtn" class="btn btn-danger" style="flex:1;">🗑 删除</button>`:''}
+              </div>
+            </div>`;
+            modal.style.display = 'flex';
+            document.getElementById('closeDiaryEdit').addEventListener('click', () => modal.style.display = 'none');
+            document.getElementById('addDiaryImageBtn').addEventListener('click', () => document.getElementById(
+                'diaryImageInput').click());
+            document.getElementById('diaryImageInput').addEventListener('change', handleImageSelect);
+            document.getElementById('saveDiaryBtn').addEventListener('click', saveEntry);
+            document.getElementById('addDiaryCategoryBtn').addEventListener('click', () => {
+                let newCat = prompt('输入新分类名称：');
+                if (newCat && newCat.trim()) {
+                    newCat = newCat.trim();
+                    if (!diaryCategories.includes(newCat)) {
+                        diaryCategories.push(newCat);
+                        saveJSON(LS_PREFIX + 'diary_categories', diaryCategories);
+                    }
+                    const sel = document.getElementById('diaryCategorySelect');
+                    if (sel) {
+                        sel.innerHTML = diaryCategories.map(c =>
+                            `<option value="${c}" ${c===newCat?'selected':''}>${c}</option>`).join('');
+                    }
+                }
+            });
+            if (id) document.getElementById('deleteDiaryBtn').addEventListener('click', () => { if (confirm(
+                    '确定删除这篇日记？')) { deleteDiary(id);
+                    modal.style.display = 'none';
+                    render(); } });
+            // 已有图片的删除按钮
+            modal.querySelectorAll('.remove-image-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const url = this.dataset.url;
+                    this.parentElement.remove();
+                });
+            });
+        }
+
+        function handleImageSelect(e) {
+            const files = [...e.target.files];
+            const container = document.getElementById('imagePreviewContainer');
+            files.forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                selectedImageFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    const div = document.createElement('div');
+                    div.innerHTML =
+                        `<img src="${ev.target.result}"><button class="remove-image-btn">x</button>`;
+                    div.querySelector('.remove-image-btn').addEventListener('click', () => {
+                        selectedImageFiles = selectedImageFiles.filter(f => f !== file);
+                        div.remove();
+                    });
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = '';
+        }
+
+        async function saveEntry() {
+            const date = document.getElementById('diaryDate').value;
+            const title = document.getElementById('diaryTitle').value.trim();
+            const content = document.getElementById('diaryContent').value.trim();
+            const category = document.getElementById('diaryCategorySelect')?.value || '其他';
+            if (!date) return alert('请选择日期');
+            if (!title) return alert('请输入标题');
+            let imageUrls = [];
+            // 保留已有的非data:图片URL
+            document.querySelectorAll('#imagePreviewContainer img').forEach(img => {
+                if (img.src && !img.src.startsWith('data:')) imageUrls.push(img.src);
+            });
+            // 上传新图片
+            for (let file of selectedImageFiles) {
+                if (cloudReady) {
+                    try {
+                        const fileName =
+                            `${USER_ID}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+                        const { data, error } = await supabase.storage.from('diary_images').upload(
+                            fileName, file, { upsert: true });
+                        if (!error) {
+                            const { data: publicUrl } = supabase.storage.from('diary_images')
+                                .getPublicUrl(fileName);
+                            if (publicUrl?.publicUrl) imageUrls.push(publicUrl.publicUrl);
+                        }
+                    } catch (err) { console.warn('图片上传失败，使用本地存储:', err); }
+                }
+                // 始终添加base64作为fallback
+                try {
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.readAsDataURL(file);
+                    });
+                    if (!imageUrls.includes(base64) && base64.length < 500000) imageUrls.push(base64);
+                } catch (e) {}
+            }
+            const entry = { user_id: USER_ID, date, title, content, category, image_urls: imageUrls,
+            updated_at: new Date() };
+            if (currentDiaryId) entry.id = currentDiaryId;
+            await saveDiary(entry);
+            document.getElementById('diaryEditModal').style.display = 'none';
+            selectedImageFiles = [];
+            render();
+        }
+
+        function render() {
+            document.getElementById('diaryPage').innerHTML = `
+          <div class="container">
+            <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+              <h3>📓 日记本</h3>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-sm" id="toggleDiarySearch"><i class="fas fa-search"></i> 搜索</button>
+                <button class="btn btn-sm btn-primary" id="newDiaryBtn">＋ 写日记</button>
+              </div>
+            </div>
+            <div class="search-box hidden" id="diarySearchBox" style="margin-bottom:14px;">
+              <i class="fas fa-search"></i>
+              <input class="input-field" id="diarySearchInput" placeholder="搜索日记标题或内容…" style="margin:0;">
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center;" id="diaryTagsContainer">
+              <span class="tag active" data-tag="all">全部</span>
+              ${diaryCategories.map(c=>`<span class="tag" data-tag="${c}">${c}</span>`).join('')}
+              <button class="btn btn-xs" id="manageDiaryCategories" title="管理分类" style="margin-left:4px;">⚙️</button>
+            </div>
+            <div class="diary-grid" id="diaryGrid"></div>
+          </div>`;
+            document.getElementById('newDiaryBtn').addEventListener('click', () => openEditor());
+            document.getElementById('toggleDiarySearch').addEventListener('click', () => document.getElementById(
+                'diarySearchBox').classList.toggle('hidden'));
+            document.getElementById('diarySearchInput').addEventListener('input', function(e) {
+                const keyword = e.target.value.toLowerCase();
+                document.querySelectorAll('.diary-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(keyword) ? '' : 'none';
+                });
+            });
+            document.getElementById('manageDiaryCategories').addEventListener('click', () => {
+                let newCat = prompt('输入新分类名称（或输入"删除:分类名"来删除）：');
+                if (!newCat) return;
+                if (newCat.startsWith('删除:')) {
+                    let delCat = newCat.replace('删除:', '').trim();
+                    if (diaryCategories.includes(delCat) && diaryCategories.length > 1) {
+                        if (confirm(`确定删除分类"${delCat}"？已有日记不会被删除。`)) {
+                            diaryCategories = diaryCategories.filter(c => c !== delCat);
+                            saveJSON(LS_PREFIX + 'diary_categories', diaryCategories);
+                            render();
+                        }
+                    } else alert('无法删除该分类（至少保留一个分类）');
+                } else {
+                    newCat = newCat.trim();
+                    if (newCat && !diaryCategories.includes(newCat)) {
+                        diaryCategories.push(newCat);
+                        saveJSON(LS_PREFIX + 'diary_categories', diaryCategories);
+                        render();
+                    }
+                }
+            });
+            // 分类标签点击
+            document.querySelectorAll('#diaryTagsContainer .tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    activeCategory = this.dataset.tag;
+                    document.querySelectorAll('#diaryTagsContainer .tag').forEach(t => t.classList
+                        .remove('active'));
+                    this.classList.add('active');
+                    renderGrid();
+                });
+            });
+            loadDiaries().then(renderGrid);
+        }
+
+        return { render, loadDiaries, diaries };
+    })();
+
+    // ==================== 财务模块 ====================
+    const FinanceModule = (function() {
+        let records = loadJSON(FINANCE_LS + 'records', []);
+        let budgetData = loadJSON(FINANCE_LS + 'budgets', {});
+        let currentStatsMonth = new Date().toISOString().slice(0, 7);
+        let currentBudgetMonth = new Date().toISOString().slice(0, 7);
+        let currentListMonth = new Date().toISOString().slice(0, 7);
+        let page = 1,
+            size = 6,
+            fType = 'all',
+            dType = 'all';
+        let currentDebtId = null;
+        let selectedRecordType = 'expense';
+        let pieChart, lineChart;
+
+        function saveData() {
+            saveJSON(FINANCE_LS + 'records', records);
+            saveJSON(FINANCE_LS + 'budgets', budgetData);
+        }
+
+        function getRepaySummary(debt) {
+            const total = (debt.amount || 0) + (debt.interest || 0);
+            const repaid = (debt.repayments || []).reduce((s, r) => s + (r.amount || 0), 0);
+            const remain = Math.max(0, total - repaid);
+            return { total, repaid, remain, isPaidOff: remain < 0.001 };
+        }
+
+        function updatePaidStatus(d) { d.paid = getRepaySummary(d).isPaidOff; }
+
+        function getMonthRecords(month) { return records.filter(r => (r.date || '').startsWith(month)); }
+
+        async function syncAddRecord(record) { if (!cloudReady) return; try { await supabase.from('records').insert(
+                record);
+            saveData(); } catch (e) {} }
+
+        async function syncDeleteRecord(id) { if (!cloudReady) return; try { await supabase.from('records').delete().eq(
+                'id', id);
+            saveData(); } catch (e) {} }
+
+        async function syncUpdateRecord(record) { if (!cloudReady) return; try { await supabase.from('records').upsert(
+                record);
+            saveData(); } catch (e) {} }
+
+        async function syncBudgetMonth(month) { if (!cloudReady) return; try { await supabase.from('budgets').upsert({
+                month, data: budgetData[month] || [] });
+            saveData(); } catch (e) {} }
+
+        async function loadCloudRecords() {
+            if (!cloudReady) return;
+            const { data, error } = await supabase.from('records').select('*').eq('user_id', USER_ID);
+            if (!error && data && data.length > 0) { records = data;
+                saveData(); }
+            const { data: bData, error: bErr } = await supabase.from('budgets').select('*');
+            if (!bErr && bData) { bData.forEach(b => { budgetData[b.month] = b.data; });
+                saveData(); }
+        }
+
+        function render() {
+            document.getElementById('financePage').innerHTML = `
+          <div class="container">
+            <div class="sub-tabs" id="financeTabs">
+              <button class="sub-tab active" data-subtab="finance-record">📝 记账</button>
+              <button class="sub-tab" data-subtab="finance-stats">📊 统计</button>
+              <button class="sub-tab" data-subtab="finance-budget">📋 预算</button>
+              <button class="sub-tab" data-subtab="finance-debt">💳 借贷</button>
+            </div>
+            <div id="finance-record" class="sub-page">
+              <div class="card">
+                <h3>💰 新增记录</h3>
+                <div class="type-btn-group" id="recordTypeGroup">
+                  <button class="type-opt" data-type="income">💚 收入</button>
+                  <button class="type-opt active" data-type="expense">🔴 支出</button>
+                  <button class="type-opt" data-type="deposit">💙 存款</button>
+                  <button class="type-opt" data-type="lend">💜 借出</button>
+                  <button class="type-opt" data-type="borrow">💛 借入</button>
+                </div>
+                <input class="input-field" type="number" id="finAmount" placeholder="金额" step="0.01">
+                <input class="input-field" id="finCate" placeholder="分类/备注（如：餐饮、工资、房租…）">
+                <div id="debtExtraFields" style="display:none;">
+                  <input class="input-field" type="number" id="finInterest" placeholder="利息（可选）" step="0.01">
+                  <input class="input-field" id="finDebtPerson" placeholder="对方姓名/备注">
+                </div>
+                <input class="input-field" type="date" id="finDate">
+                <button class="btn btn-primary" id="addRecordBtn" style="width:100%;margin-top:8px;">➕ 添加记录</button>
+              </div>
+              <div class="card">
+                <h3>📋 交易记录</h3>
+                <input type="month" id="listMonthPicker" class="input-field" style="width:auto;">
+                <div class="sub-tabs" style="margin:10px 0;" id="mainFilter">
+                  <button class="sub-tab active" data-filter="all">全部</button>
+                  <button class="sub-tab" data-filter="income">收入</button>
+                  <button class="sub-tab" data-filter="expense">支出</button>
+                  <button class="sub-tab" data-filter="deposit">存款</button>
+                  <button class="sub-tab" data-filter="lend">借出</button>
+                  <button class="sub-tab" data-filter="borrow">借入</button>
+                </div>
+                <div id="finList"></div>
+                <div class="pagination" id="finPage"></div>
+              </div>
+            </div>
+            <div id="finance-stats" class="sub-page hidden">
+              <div class="card"><h3>📊 月度统计</h3><input type="month" id="statsMonthPicker" class="input-field" style="width:auto;"><div class="chart-placeholder"><canvas id="pie" height="150"></canvas></div><div class="chart-placeholder"><canvas id="line" height="150"></canvas></div><div class="stat-box"><span>收入 <b style="color:var(--income)">0</b></span><span>支出 <b style="color:var(--expense)">0</b></span></div></div>
+            </div>
+            <div id="finance-budget" class="sub-page hidden">
+              <div class="card"><h3>📋 预算管理</h3><input type="month" id="budgetMonthPicker" class="input-field" style="width:auto;"><input class="input-field" id="budName" placeholder="分类名称"><input class="input-field" type="number" id="budVal" placeholder="预算金额" step="0.01"><button class="btn btn-primary" id="addBudBtn" style="width:100%;">➕ 添加预算</button><div id="budList" style="margin-top:14px;"></div></div>
+            </div>
+            <div id="finance-debt" class="sub-page hidden">
+              <div class="card">
+                <h3>💳 借贷追踪</h3>
+                <div class="sub-tabs" style="margin:10px 0;" id="debtFilterBar"><button class="sub-tab active" data-debtfilter="all">全部</button><button class="sub-tab" data-debtfilter="lend">应收</button><button class="sub-tab" data-debtfilter="borrow">应付</button><button class="sub-tab" data-debtfilter="unpaid">未还清</button></div>
+                <div class="debt-section"><h4>📤 应收</h4><div id="debtLendList"></div></div>
+                <div class="debt-section"><h4>📥 应付</h4><div id="debtBorrowList"></div></div>
+              </div>
+            </div>
+          </div>
+          <div id="repayModal" class="modal" style="display:none;"><div class="modal-card"><h3>💳 添加还款</h3><input id="repayAmount" class="input-field" type="number" step="0.01" placeholder="还款金额"><input id="repayDate" class="input-field" type="date"><div style="display:flex;gap:12px;margin-top:16px;"><button id="confirmRepayBtn" class="btn btn-primary" style="flex:1;">✅ 确认</button><button id="cancelRepayBtn" class="btn" style="flex:1;">取消</button></div></div></div>`;
+
+            document.getElementById('finDate').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('listMonthPicker').value = currentListMonth;
+            document.getElementById('statsMonthPicker').value = currentStatsMonth;
+            document.getElementById('budgetMonthPicker').value = currentBudgetMonth;
+
+            // 类型选择
+            document.querySelectorAll('#recordTypeGroup .type-opt').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#recordTypeGroup .type-opt').forEach(b => b.classList
+                        .remove('active'));
+                    this.classList.add('active');
+                    selectedRecordType = this.dataset.type;
+                    const debtFields = document.getElementById('debtExtraFields');
+                    if (debtFields) debtFields.style.display = (selectedRecordType === 'lend' ||
+                        selectedRecordType === 'borrow') ? 'block' : 'none';
+                });
+            });
+
+            // 子标签切换
+            document.querySelectorAll('#financeTabs .sub-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const subtab = this.dataset.subtab;
+                    document.querySelectorAll('#financeTabs .sub-tab').forEach(t => t.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('#financePage .sub-page').forEach(sp => sp.classList.add(
+                        'hidden'));
+                    document.getElementById(subtab).classList.remove('hidden');
+                    if (subtab === 'finance-stats') { updateStats();
+                        drawCharts(); } else if (subtab === 'finance-budget') renderBud();
+                    else if (subtab === 'finance-debt') renderDebt();
+                });
+            });
+
+            // 添加记录
+            document.getElementById('addRecordBtn').addEventListener('click', async () => {
+                const amount = parseFloat(document.getElementById('finAmount').value);
+                const cate = document.getElementById('finCate').value.trim();
+                const date = document.getElementById('finDate').value;
+                if (isNaN(amount) || amount <= 0) return alert('金额必须大于0');
+                if (!cate) return alert('分类/备注不能为空');
+                const newRecord = { id: Date.now(), type: selectedRecordType, amount, cate, date,
+                    paid: false, repayments: [] };
+                if (selectedRecordType === 'lend' || selectedRecordType === 'borrow') {
+                    const interest = parseFloat(document.getElementById('finInterest')?.value || '0');
+                    const person = document.getElementById('finDebtPerson')?.value?.trim() || '';
+                    newRecord.interest = isNaN(interest) ? 0 : interest;
+                    newRecord.person = person;
+                    newRecord.cate = person ? `${cate} (${person})` : cate;
+                }
+                records.unshift(newRecord);
+                await syncAddRecord(newRecord);
+                document.getElementById('finAmount').value = '';
+                document.getElementById('finCate').value = '';
+                renderAll();
+            });
+
+            // 筛选
+            document.querySelectorAll('#mainFilter button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    fType = this.dataset.filter;
+                    page = 1;
+                    document.querySelectorAll('#mainFilter button').forEach(b => b.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    renderList();
+                });
+            });
+
+            document.getElementById('listMonthPicker').addEventListener('change', e => { currentListMonth = e.target
+                    .value;
+                page = 1;
+                renderList(); });
+            document.getElementById('statsMonthPicker').addEventListener('change', e => { currentStatsMonth = e.target
+                    .value;
+                updateStats();
+                drawCharts(); });
+            document.getElementById('budgetMonthPicker').addEventListener('change', e => { currentBudgetMonth = e.target
+                    .value;
+                renderBud(); });
+            document.getElementById('addBudBtn').addEventListener('click', async () => {
+                const n = document.getElementById('budName').value.trim();
+                const v = parseFloat(document.getElementById('budVal').value);
+                if (!n || isNaN(v) || v <= 0) return alert('请填写有效的预算分类和金额');
+                if (!budgetData[currentBudgetMonth]) budgetData[currentBudgetMonth] = [];
+                budgetData[currentBudgetMonth].push({ n, v });
+                await syncBudgetMonth(currentBudgetMonth);
+                renderBud();
+                document.getElementById('budName').value = '';
+                document.getElementById('budVal').value = '';
+            });
+
+            // 还款
+            document.getElementById('confirmRepayBtn').addEventListener('click', async () => {
+                if (!currentDebtId) return;
+                const am = parseFloat(document.getElementById('repayAmount').value);
+                const date = document.getElementById('repayDate').value || new Date().toISOString().slice(0,
+                    10);
+                if (isNaN(am) || am <= 0) return alert('还款金额无效');
+                const debt = records.find(d => d.id === currentDebtId);
+                if (debt) {
+                    if (!debt.repayments) debt.repayments = [];
+                    debt.repayments.push({ amount: am, date });
+                    updatePaidStatus(debt);
+                    await syncUpdateRecord(debt);
+                    document.getElementById('repayModal').style.display = 'none';
+                    renderAll();
+                }
+            });
+            document.getElementById('cancelRepayBtn').addEventListener('click', () => document.getElementById(
+                'repayModal').style.display = 'none');
+
+            // 借贷筛选
+            document.querySelectorAll('#debtFilterBar button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    dType = this.dataset.debtfilter;
+                    document.querySelectorAll('#debtFilterBar button').forEach(b => b.classList
+                        .remove('active'));
+                    this.classList.add('active');
+                    renderDebt();
+                });
+            });
+
+            renderAll();
+        }
+
+        function renderList() {
+            let arr = records.filter(x => fType === 'all' || x.type === fType).filter(x => (x.date || '').startsWith(
+                currentListMonth));
+            const totalPage = Math.ceil(arr.length / size);
+            const items = arr.slice((page - 1) * size, page * size);
+            const box = document.getElementById('finList');
+            if (!box) return;
+            box.innerHTML = '';
+            if (!items.length) { box.innerHTML =
+                '<p style="padding:12px;text-align:center;opacity:0.6;">📭 暂无记录</p>'; } else {
+                items.forEach(x => {
+                    const div = document.createElement('div');
+                    div.className = 'info-row';
+                    let typeLabel = { income: '💚', expense: '🔴', deposit: '💙', lend: '💜',
+                        borrow: '💛' } [x.type] || '';
+                    div.innerHTML =
+                        `<span>${x.date} ${typeLabel} ${escapeHtml(x.cate)}</span><span style="color:var(--${x.type||'text'});">${x.amount.toFixed(2)}</span><button class="btn btn-sm btn-danger" data-del="${x.id}" style="margin-left:8px;">🗑</button>`;
+                    box.appendChild(div);
+                });
+                document.querySelectorAll('[data-del]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (confirm('删除这条记录？')) {
+                            records = records.filter(x => x.id !== parseInt(btn.dataset.del));
+                            await syncDeleteRecord(parseInt(btn.dataset.del));
+                            renderAll();
+                        }
+                    });
+                });
+            }
+            const pag = document.getElementById('finPage');
+            pag.innerHTML = '';
+            if (totalPage > 1) {
+                for (let i = 1; i <= totalPage; i++) {
+                    const b = document.createElement('button');
+                    b.innerText = i;
+                    b.className = i === page ? 'active' : '';
+                    b.addEventListener('click', () => { page = i;
+                        renderList(); });
+                    pag.appendChild(b);
+                }
+            }
+        }
+
+        function renderBud() {
+            const box = document.getElementById('budList');
+            if (!box) return;
+            box.innerHTML = '';
+            const budgets = budgetData[currentBudgetMonth] || [];
+            if (!budgets.length) { box.innerHTML =
+                '<p style="padding:12px;text-align:center;opacity:0.6;">📋 暂无预算</p>'; return; }
+            budgets.forEach((b, idx) => {
+                const used = getMonthRecords(currentBudgetMonth).filter(r => r.type === 'expense' && r.cate === b.n)
+                    .reduce((s, r) => s + r.amount, 0);
+                const left = b.v - used;
+                const div = document.createElement('div');
+                div.className = 'budget-item';
+                div.innerHTML = `
+              <div class="flex-between"><b>${escapeHtml(b.n)}</b><button class="btn btn-xs btn-danger delete-budget-btn" data-idx="${idx}">🗑</button></div>
+              <div class="progress-bar"><div class="progress" style="width:${Math.min(100,(used/b.v)*100)}%;background:${left<0?'var(--danger)':'var(--highlight-bg)'};"></div></div>
+              <div class="flex-between" style="font-size:0.75rem;"><span>预算 ${b.v.toFixed(2)}</span><span>已花 ${used.toFixed(2)} | 剩余 ${left.toFixed(2)}</span></div>`;
+                box.appendChild(div);
+            });
+            document.querySelectorAll('.delete-budget-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    if (!isNaN(idx) && confirm('删除该预算？')) {
+                        budgetData[currentBudgetMonth].splice(idx, 1);
+                        await syncBudgetMonth(currentBudgetMonth);
+                        renderBud();
+                    }
+                });
+            });
+        }
+
+        function renderDebt() {
+            const lendBox = document.getElementById('debtLendList');
+            const borrowBox = document.getElementById('debtBorrowList');
+            if (!lendBox || !borrowBox) return;
+            let lendArr = records.filter(x => x.type === 'lend');
+            let borrowArr = records.filter(x => x.type === 'borrow');
+            if (dType === 'unpaid') { lendArr = lendArr.filter(x => !getRepaySummary(x).isPaidOff);
+                borrowArr = borrowArr.filter(x => !getRepaySummary(x).isPaidOff); } else if (dType === 'lend')
+                borrowArr = [];
+            else if (dType === 'borrow') lendArr = [];
+
+            function renderDebtList(arr, box) {
+                if (!arr.length) { box.innerHTML =
+                    '<p style="padding:8px;opacity:0.6;">📭 暂无记录</p>'; return; }
+                box.innerHTML = arr.map(debt => {
+                    const s = getRepaySummary(debt);
+                    const paidLabel = s.isPaidOff ? ' ✅已还清' : '';
+                    return `<div class="info-row"><span>${escapeHtml(debt.cate||'未命名')}${paidLabel}</span><span style="font-size:0.75rem;">总额${s.total.toFixed(2)} | 剩余${s.remain.toFixed(2)}</span><button class="btn btn-xs btn-primary" data-repay="${debt.id}">💳 还款</button></div>`;
+                }).join('');
+            }
+            renderDebtList(lendArr, lendBox);
+            renderDebtList(borrowArr, borrowBox);
+
+            document.querySelectorAll('[data-repay]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentDebtId = parseInt(btn.dataset.repay);
+                    document.getElementById('repayModal').style.display = 'flex';
+                    document.getElementById('repayAmount').value = '';
+                    document.getElementById('repayDate').value = new Date().toISOString().slice(0,
+                        10);
+                });
+            });
+        }
+
+        function updateStats() {
+            const month = currentStatsMonth;
+            const inc = getMonthRecords(month).filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0);
+            const exp = getMonthRecords(month).filter(r => r.type === 'expense').reduce((s, r) => s + r.amount, 0);
+            const statBox = document.querySelector('#finance-stats .stat-box');
+            if (statBox) statBox.innerHTML =
+                `<span>收入 <b style="color:var(--income);">+${inc.toFixed(2)}</b></span><span>支出 <b style="color:var(--expense);">-${exp.toFixed(2)}</b></span>`;
+        }
+
+        function drawCharts() {
+            const month = currentStatsMonth;
+            const inc = getMonthRecords(month).filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0);
+            const exp = getMonthRecords(month).filter(r => r.type === 'expense').reduce((s, r) => s + r.amount, 0);
+            const pieCtx = document.getElementById('pie')?.getContext('2d');
+            if (pieCtx) {
+                if (pieChart) pieChart.destroy();
+                pieChart = new Chart(pieCtx, { type: 'doughnut', data: { labels: ['收入', '支出'], datasets: [{ data: [
+                            inc, exp
+                        ], backgroundColor: ['#4ade80', '#f87171'] }] }, options: { responsive: true,
+                        maintainAspectRatio: false } });
+            }
+            const months = [...new Set(records.map(r => r.date?.slice(0, 7)).filter(Boolean))].sort();
+            const incomeData = months.map(m => getMonthRecords(m).filter(r => r.type === 'income').reduce((s, r) => s + r
+                .amount, 0));
+            const expenseData = months.map(m => getMonthRecords(m).filter(r => r.type === 'expense').reduce((s, r) => s + r
+                .amount, 0));
+            const lineCtx = document.getElementById('line')?.getContext('2d');
+            if (lineCtx) {
+                if (lineChart) lineChart.destroy();
+                lineChart = new Chart(lineCtx, { type: 'line', data: { labels: months, datasets: [{ label: '收入',
+                        data: incomeData, borderColor: '#4ade80', tension: 0.3 }, { label: '支出',
+                        data: expenseData, borderColor: '#f87171', tension: 0.3 }] },
+                    options: { responsive: true, maintainAspectRatio: false } });
+            }
+        }
+
+        function renderAll() {
+            renderList();
+            if (!document.getElementById('finance-stats')?.classList.contains('hidden')) { updateStats();
+                drawCharts(); }
+            if (!document.getElementById('finance-budget')?.classList.contains('hidden')) renderBud();
+            if (!document.getElementById('finance-debt')?.classList.contains('hidden')) renderDebt();
+        }
+
+        return { render, loadCloudRecords, records, budgetData };
+    })();
+
+    // ==================== 设置模块 ====================
+    const SettingsModule = (function() {
+        function updateConnectionUI() {
+            const dot = document.getElementById('connDot');
+            const label = document.getElementById('connLabel');
+            if (dot && label) {
+                if (cloudReady) { dot.className = 'conn-dot online';
+                    label.textContent = '已连接';
+                    label.style.color = 'var(--success)'; } else { dot.className = 'conn-dot offline';
+                    label.textContent = '未连接';
+                    label.style.color = 'var(--danger)'; }
+            }
+        }
+
+        async function manualSync() {
+            const syncBtn = document.getElementById('manualSyncBtn');
+            if (syncBtn) { syncBtn.disabled = true;
+                syncBtn.textContent = '⏳ 同步中...'; }
+            cloudReady = await testCloudConnection();
+            if (cloudReady) {
+                await PlanModule.loadCloud();
+                await DiaryModule.loadDiaries();
+                await FinanceModule.loadCloudRecords();
+                alert('✅ 同步完成！');
+            } else {
+                alert('⚠️ 无法连接云端，请检查网络或Supabase项目状态。数据已保存在本地。');
+            }
+            if (syncBtn) { syncBtn.disabled = false;
+                syncBtn.textContent = '🔄 手动同步'; }
+            updateConnectionUI();
+        }
+
+        function exportAllData() {
+            const allData = {
+                plan: loadJSON(LS_PREFIX + PlanModule.currentWeekKeyVal, {}),
+                diaries: loadJSON(LS_PREFIX + 'diaries', []),
+                finance: { records: loadJSON(FINANCE_LS + 'records', []), budgets: loadJSON(FINANCE_LS + 'budgets',
+                        {}) },
+                settings: { theme: localStorage.getItem('selectedTheme') || 'dark', granularity: localStorage
+                        .getItem(LS_PREFIX + 'granularity') || 'half' }
+            };
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `强韧生活_备份_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        }
+
+        async function clearAllData() {
+            if (confirm('⚠️ 确定要清空所有本地和云端数据吗？此操作不可恢复！')) {
+                localStorage.clear();
+                if (cloudReady) {
+                    try {
+                        await supabase.from('plan_data').delete().neq('id', -1);
+                        await supabase.from('diary').delete().neq('id', -1);
+                        await supabase.from('records').delete().neq('id', -1);
+                        await supabase.from('budgets').delete().neq('month', '');
+                        await supabase.from('user_settings').delete().neq('user_id', '');
+                    } catch (e) { console.error('清空云端数据失败', e); }
+                }
+                alert('数据已清空，页面将刷新');
+                location.reload();
+            }
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    if (confirm('导入将覆盖现有数据，确定继续吗？')) {
+                        if (data.plan) saveJSON(LS_PREFIX + PlanModule.currentWeekKeyVal, data.plan);
+                        if (data.diaries) saveJSON(LS_PREFIX + 'diaries', data.diaries);
+                        if (data.finance) { if (data.finance.records) saveJSON(FINANCE_LS + 'records', data
+                                .finance.records); if (data.finance.budgets) saveJSON(FINANCE_LS +
+                                'budgets', data.finance.budgets); }
+                        if (data.settings) { if (data.settings.theme) PlanModule.setTheme(data.settings
+                                .theme); if (data.settings.granularity) { PlanModule.useHalfHour = data
+                                    .settings.granularity === 'half'; } }
+                        alert('✅ 导入成功，页面将刷新');
+                        location.reload();
+                    }
+                } catch (err) { alert('文件格式不正确'); }
+            };
+            input.click();
+        }
+
+        function render() {
+            document.getElementById('settingsPage').innerHTML = `
+          <div class="container">
+            <div class="card">
+              <h3>🔗 云端连接</h3>
+              <div class="info-row"><span><span class="conn-dot ${cloudReady?'online':'offline'}" id="connDot"></span> 状态</span><span id="connLabel" style="color:${cloudReady?'var(--success)':'var(--danger)'};">${cloudReady?'已连接':'未连接'}</span></div>
+              <div class="info-row"><span>项目ID</span><span style="font-size:0.7rem;opacity:0.7;">yemvgjrjjltfjzrsieds</span></div>
+              <button class="btn btn-sm" id="manualSyncBtn" style="margin-top:10px;">🔄 手动同步</button>
+            </div>
+            <div class="card">
+              <h3>🎨 主题设置</h3>
+              <div class="theme-selector" id="settingsThemeGroup" style="margin-top:10px;"></div>
+            </div>
+            <div class="card">
+              <h3>📅 计划设置</h3>
+              <div class="setting-item"><span>时间粒度</span><select id="granularitySelect" class="input-field" style="width:auto;margin:0;"><option value="half" ${PlanModule.useHalfHour?'selected':''}>每半小时</option><option value="hour" ${!PlanModule.useHalfHour?'selected':''}>每小时</option></select></div>
+              <div class="setting-item"><span>提醒通知</span><button id="settingsReminderBtn" class="btn btn-sm">${PlanModule.reminderEnabled?'🔔 已开启':'🔕 已关闭'}</button></div>
+            </div>
+            <div class="card">
+              <h3>📦 数据管理</h3>
+              <div class="setting-item"><span>导出全部数据</span><button class="btn btn-sm" id="exportAllBtn">📎 导出JSON</button></div>
+              <div class="setting-item"><span>导入数据</span><button class="btn btn-sm" id="importDataBtn">📂 导入JSON</button></div>
+              <div class="setting-item"><span>手动云端同步</span><button class="btn btn-sm" id="backupToCloudBtn">☁️ 同步到云端</button></div>
+              <div class="setting-item"><span style="color:var(--danger);">清空所有数据</span><button class="btn btn-sm btn-danger" id="clearAllBtn">🗑 全部清空</button></div>
+            </div>
+            <div class="card" style="text-align:center;">
+              <p style="font-size:0.9rem;color:var(--text-secondary);">强韧生活 v1.1</p>
+              <p style="font-size:0.7rem;opacity:0.6;margin-top:4px;">计划 · 日记 · 财务 · 一体化管理</p>
+              <p style="font-size:0.7rem;opacity:0.6;">数据本地+云端双存储 · 支持离线使用</p>
+            </div>
+          </div>`;
+
+            const themes = ['dark', 'aurora', 'sunset', 'light-gray', 'sakura', 'ink', 'mint', 'ocean'];
+            const themeGroup = document.getElementById('settingsThemeGroup');
+            if (themeGroup) {
+                themeGroup.innerHTML = themes.map(t =>
+                    `<button class="theme-btn${document.body.className.includes(t)?' active':''}" data-theme="${t}">${t==='dark'?'🌙':t==='aurora'?'🌿':t==='sunset'?'🌅':t==='light-gray'?'☁️':t==='sakura'?'🌸':t==='ink'?'🖋️':t==='mint'?'🍃':'🌊'}</button>`
+                    ).join('');
+                themeGroup.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        PlanModule.setTheme(this.dataset.theme);
+                        document.querySelectorAll('#settingsThemeGroup .theme-btn').forEach(b => b
+                            .classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            }
+            document.getElementById('manualSyncBtn')?.addEventListener('click', manualSync);
+            document.getElementById('backupToCloudBtn')?.addEventListener('click', manualSync);
+            document.getElementById('exportAllBtn')?.addEventListener('click', exportAllData);
+            document.getElementById('importDataBtn')?.addEventListener('click', importData);
+            document.getElementById('clearAllBtn')?.addEventListener('click', clearAllData);
+            document.getElementById('granularitySelect')?.addEventListener('change', function() {
+                const isHalf = this.value === 'half';
+                if (isHalf !== PlanModule.useHalfHour) {
+                    if (confirm('切换粒度会重置表格默认内容，子任务和自定义主任务会丢失。确定继续吗？')) {
+                        PlanModule.useHalfHour = isHalf;
+                        PlanModule.saveSettings(document.body.className.replace('theme-', ''), isHalf ? 'half' :
+                            'hour');
+                        PlanModule.resetTableData();
+                        PlanModule.renderTable();
+                    } else { this.value = PlanModule.useHalfHour ? 'half' : 'hour'; }
+                }
+            });
+            document.getElementById('settingsReminderBtn')?.addEventListener('click', () => {
+                PlanModule.toggleReminder();
+                const btn = document.getElementById('settingsReminderBtn');
+                if (btn) btn.textContent = PlanModule.reminderEnabled ? '🔔 已开启' : '🔕 已关闭';
+            });
+            updateConnectionUI();
+        }
+
+        return { render, updateConnectionUI };
+    })();
+
+    // ==================== 启动 ====================
+    window.addEventListener('DOMContentLoaded', async () => {
+        const sdkReady = initSupabase();
+        if (!sdkReady) {
+            alert('⚠️ Supabase SDK 加载失败，请刷新重试。应用将以离线模式运行。');
+        }
+        cloudReady = await testCloudConnection();
+        await PlanModule.loadSettings();
+        switchPage('plan');
+        SettingsModule.updateConnectionUI();
+        console.log('🚀 强韧生活已启动 | 云端:', cloudReady ? '已连接' : '离线模式');
+    });
+    </script>
+</body>
+</html>

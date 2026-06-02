@@ -1,0 +1,16 @@
+{
+  "name": "强韧计划",
+  "short_name": "强韧计划",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#2DD4BF",
+  "description": "极简周计划与待办",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
